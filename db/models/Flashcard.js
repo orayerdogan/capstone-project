@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 
 const FlashcardSchema = new mongoose.Schema({
-  collection: {
+  topic: {
     type: String,
     required: true,
   },
