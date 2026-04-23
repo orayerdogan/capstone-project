@@ -2,7 +2,7 @@ import useSWR from "swr";
 import { fetcher } from "../lib/fetcher";
 import Flashcard from "../Components/Flashcard/Flashcard";
 
-export default function Home() {
+export default function HomePage() {
   const { data, error } = useSWR("/api/flashcards", fetcher);
 
   if (error) return <p style={styles.status}>Fehler beim Laden</p>;
