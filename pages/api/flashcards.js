@@ -2,31 +2,47 @@ import dbConnect from "../../db/dbConnect";
 import Flashcard from "../../db/models/Flashcard";
 
 const topicCache = {};
+const pendingRequests = {};
 
 async function getImagesFromJikan(topic) {
   if (topicCache[topic]) {
     return topicCache[topic];
   }
 
-  try {
-    const res = await fetch(
-      `https://api.jikan.moe/v4/anime?q=${topic}&limit=2`
-    );
-    const data = await res.json();
-
-    const images = {
-      front: data.data[0]?.images.jpg.image_url || null,
-      back: data.data[1]?.images.jpg.image_url || null,
-    };
-
-    topicCache[topic] = images; // 🔥 speichern
-    return images;
-  } catch {
-    return { front: null, back: null };
+  if (pendingRequests[topic]) {
+    return pendingRequests[topic];
   }
+
+  const request = fetch(`https://api.jikan.moe/v4/anime?q=${topic}&limit=2`)
+    .then((res) => res.json())
+    .then((data) => {
+      const images = {
+        front: data.data[0]?.images?.jpg?.image_url || null,
+        back: data.data[1]?.images?.jpg?.image_url || null,
+      };
+
+      topicCache[topic] = images;
+      delete pendingRequests[topic];
+
+      return images;
+    })
+    .catch((err) => {
+      console.error(`Jikan error for topic "${topic}":`, err);
+
+      delete pendingRequests[topic];
+
+      return { front: null, back: null };
+    });
+  pendingRequests[topic] = request;
+
+  return request;
 }
 
 export default async function handler(req, res) {
+  if (req.method !== "GET") {
+    return res.status(405).json({ message: "Method not allowed" });
+  }
+
   await dbConnect();
 
   try {
@@ -39,13 +55,14 @@ export default async function handler(req, res) {
         return {
           ...card.toObject(),
           imageFront: images.front,
-          imageBack: images.back || images.front, // fallback
+          imageBack: images.back || images.front,
         };
       })
     );
 
     res.status(200).json(flashcardsWithImages);
-  } catch (error) {
-    res.status(500).json({ error: "Fehler beim Laden" });
+  } catch (err) {
+    console.error("API error:", err);
+    res.status(500).json({ error: "Fehler beim Laden der Flashcards" });
   }
 }

@@ -72,11 +72,11 @@ const styles = {
     alignItems: "center",
     boxShadow: "0 0 15px rgba(0,0,0,0.5)",
 
-    // 🔥 Background Image
+    //Background Image
     backgroundSize: "cover",
     backgroundPosition: "center",
 
-    // 🔥 Overlay für Lesbarkeit
+    //Overlay für Lesbarkeit
     backgroundBlendMode: "darken",
     backgroundColor: "rgba(0,0,0,0.6)",
 
