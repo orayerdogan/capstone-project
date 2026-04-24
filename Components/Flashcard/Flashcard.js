@@ -4,7 +4,7 @@ export default function Flashcard({ card }) {
   const [flipped, setFlipped] = useState(false);
 
   function handleFlip() {
-    setFlipped(!flipped);
+    setFlipped((prev) => !prev);
   }
 
   const frontImage = card.imageFront || "/images/default.jpg";
