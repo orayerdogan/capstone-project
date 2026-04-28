@@ -1,9 +1,17 @@
 import useSWR from "swr";
 import { fetcher } from "../lib/fetcher";
 import Flashcard from "../Components/Flashcard/Flashcard";
+import { useState } from "react";
+import Modal from "../Components/Modal/Modal";
+import CreateFlashcard from "../Components/CreateFlashcard/CreateFlashcard";
 
 export default function HomePage() {
-  const { data, error } = useSWR("/api/flashcards", fetcher);
+  const { data, error, mutate } = useSWR("/api/flashcards", fetcher);
+  const [open, setOpen] = useState(false);
+  
+  function handleAdd(newCard) {
+    mutate([newCard, ...data], false);
+  }
 
   if (error) return <p style={styles.status}>Fehler beim Laden</p>;
   if (!data) return <p style={styles.status}>Lade...</p>;
@@ -13,12 +21,24 @@ export default function HomePage() {
       <header>
         <h1 style={styles.title}>Anime Flashcards 🎌</h1>
       </header>
-
+      <button style={styles.addButton} onClick={() => setOpen(true)}>
+        + Add Flashcard
+      </button>
       <section style={styles.list} aria-label="Anime Flashcards">
         {data.map((card) => (
           <Flashcard key={card._id} card={card} />
         ))}
       </section>
+      {open && (
+        <Modal onClose={() => setOpen(false)}>
+          <CreateFlashcard
+            onAdd={(card) => {
+              handleAdd(card);
+              setOpen(false);
+            }}
+          />
+        </Modal>
+      )}
     </main>
   );
 }
@@ -32,6 +52,17 @@ const styles = {
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
+  },
+  addButton: {
+    marginBottom: "20px",
+    padding: "12px 18px",
+    borderRadius: "10px",
+    border: "none",
+    background: "#00f5ff",
+    color: "#020617",
+    fontWeight: "bold",
+    cursor: "pointer",
+    boxShadow: "0 0 10px #00f5ff",
   },
   title: {
     fontSize: "32px",
