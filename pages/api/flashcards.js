@@ -107,6 +107,18 @@ export default async function handler(req, res) {
       return res.status(500).json({ error: "Fehler beim Aktualisieren" });
     }
   }
+  if (req.method === "DELETE") {
+    try {
+      const { id } = req.body;
+
+      await Flashcard.findByIdAndDelete(id);
+
+      return res.status(200).json({ message: "Deleted" });
+    } catch (err) {
+      console.error("DELETE error:", err);
+      return res.status(500).json({ error: "Fehler beim Löschen" });
+    }
+  }
 
   return res.status(405).json({ message: "Method not allowed" });
 }
