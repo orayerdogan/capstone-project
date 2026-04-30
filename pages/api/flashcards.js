@@ -60,7 +60,7 @@ export default async function handler(req, res) {
     try {
       const { question, answer, topic } = req.body;
 
-      if (!id || !question || !answer || !topic) {
+      if (!question || !answer || !topic) {
         return res.status(400).json({ error: "Alle Felder sind erforderlich" });
       }
 
@@ -91,7 +91,7 @@ export default async function handler(req, res) {
     try {
       const { id, question, answer, topic } = req.body;
 
-      if (!question || !answer || !topic) {
+      if (!id || !question || !answer || !topic) {
         return res.status(400).json({ error: "Alle Felder sind erforderlich" });
       }
 
