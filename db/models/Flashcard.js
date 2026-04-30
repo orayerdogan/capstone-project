@@ -13,6 +13,12 @@ const FlashcardSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  imageFront: {
+    type: String,
+  },
+  imageBack: {
+    type: String,
+  },
 });
 
 export default mongoose.models.Flashcard ||
