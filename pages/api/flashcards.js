@@ -72,14 +72,6 @@ export default async function handler(req, res) {
       const imageBack =
         images.back || images.front || fallbackImages[topic] || FALLBACK_IMAGE;
 
-      console.log("SAVING CARD:", {
-        question,
-        answer,
-        topic,
-        imageFront,
-        imageBack,
-      });
-
       const newCard = await Flashcard.create({
         question,
         answer,
@@ -94,7 +86,6 @@ export default async function handler(req, res) {
       return res.status(500).json({ error: "Fehler beim Erstellen" });
     }
   }
-
 
   if (req.method === "PUT") {
     try {

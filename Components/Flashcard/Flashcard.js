@@ -2,7 +2,7 @@ import { useState } from "react";
 
 export default function Flashcard({ card, onEdit }) {
   const [flipped, setFlipped] = useState(false);
-  console.log("CARD:", card);
+
   function handleFlip() {
     setFlipped((prev) => !prev);
   }

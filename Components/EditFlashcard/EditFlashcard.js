@@ -53,8 +53,6 @@ export default function EditFlashcard({ card, onClose, onUpdate }) {
 
       const updatedCard = await response.json();
 
-      console.log("UPDATED CARD:", updatedCard); // optional debug
-
       onUpdate(updatedCard);
       onClose();
     } catch (err) {
