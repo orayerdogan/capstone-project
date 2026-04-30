@@ -60,7 +60,7 @@ export default async function handler(req, res) {
     try {
       const { question, answer, topic } = req.body;
 
-      if (!question || !answer || !topic) {
+      if (!id || !question || !answer || !topic) {
         return res.status(400).json({ error: "Alle Felder sind erforderlich" });
       }
 
@@ -98,7 +98,7 @@ export default async function handler(req, res) {
       const updatedCard = await Flashcard.findByIdAndUpdate(
         id,
         { question, answer, topic },
-        { returnDocument: "after" }
+        { new: true }
       );
 
       return res.status(200).json(updatedCard);

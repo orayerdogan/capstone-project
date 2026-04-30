@@ -47,7 +47,7 @@ export default function EditFlashcard({ card, onClose, onUpdate }) {
       });
 
       if (!response.ok) {
-        console.error("Update failed");
+        setError("Something went wrong. Please try again.");
         return;
       }
 
@@ -65,28 +65,30 @@ export default function EditFlashcard({ card, onClose, onUpdate }) {
       <h2>Edit Flashcard</h2>
 
       <form onSubmit={handleSubmit}>
-        <label>Question</label>
+        <label htmlFor="question">Question</label>
         <input
-          style={styles.input}
+          id="question"
           name="question"
           value={form.question}
           onChange={handleChange}
         />
 
-        <label>Answer</label>
+        <label htmlFor="answer">Answer</label>
         <input
-          style={styles.input}
+          id="answer"
           name="answer"
           value={form.answer}
           onChange={handleChange}
+          style={styles.input}
         />
 
-        <label>Collection</label>
+        <label htmlFor="topic">Collection</label>
         <select
-          style={styles.input}
+          id="topic"
           name="topic"
           value={form.topic}
           onChange={handleChange}
+          style={styles.input}
         >
           {collections.map((collection) => (
             <option key={collection} value={collection}>

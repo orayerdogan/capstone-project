@@ -80,17 +80,6 @@ const styles = {
     cursor: "pointer",
     boxShadow: "0 0 10px #00f5ff",
   },
-  editButton: {
-    position: "absolute",
-    top: "10px",
-    right: "10px",
-    background: "rgba(0,0,0,0.6)",
-    border: "none",
-    borderRadius: "6px",
-    color: "white",
-    cursor: "pointer",
-    padding: "4px 6px",
-  },
   title: {
     fontSize: "32px",
     color: "#00f5ff",
