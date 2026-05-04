@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-export default function Flashcard({ card, onEdit }) {
+export default function Flashcard({ card, onEdit, onDelete }) {
   const [flipped, setFlipped] = useState(false);
 
   function handleFlip() {
@@ -20,6 +20,15 @@ export default function Flashcard({ card, onEdit }) {
         }}
       >
         ✏️ Edit
+      </button>
+      <button
+        style={styles.deleteButton}
+        onClick={(event) => {
+          event.stopPropagation();
+          onDelete(card._id);
+        }}
+      >
+        🗑
       </button>
 
       <div
@@ -131,6 +140,18 @@ const styles = {
     top: "10px",
     right: "10px",
     background: "rgba(0,0,0,0.6)",
+    border: "none",
+    borderRadius: "6px",
+    color: "white",
+    cursor: "pointer",
+    padding: "4px 6px",
+    zIndex: 2,
+  },
+  deleteButton: {
+    position: "absolute",
+    bottom: "10px",
+    right: "10px",
+    background: "rgba(186, 25, 31, 0.7)",
     border: "none",
     borderRadius: "6px",
     color: "white",
