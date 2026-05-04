@@ -37,7 +37,10 @@ export default function HomePage() {
       },
       body: JSON.stringify({ id: deleteId }),
     });
-
+    if (!response.ok) {
+      setMessage("Delete failed ❌");
+      return;
+    }
     mutate(
       data.filter((card) => card._id !== deleteId),
       false
