@@ -30,26 +30,36 @@ export default function HomePage() {
     setDeleteId(id);
   }
   async function confirmDelete() {
-    await fetch("/api/flashcards", {
-      method: "DELETE",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ id: deleteId }),
-    });
-    if (!response.ok) {
-      setMessage("Delete failed ❌");
-      return;
+    try {
+      const response = await fetch("/api/flashcards", {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ id: deleteId }),
+      });
+
+      if (!response.ok) {
+        setMessage("Delete failed ❌");
+        return;
+      }
+
+      mutate(
+        data.filter((card) => card._id !== deleteId),
+        false
+      );
+
+      setDeleteId(null);
+
+      setMessage("Flashcard deleted ✅");
+
+      setTimeout(() => {
+        setMessage("");
+      }, 2000);
+    } catch (error) {
+      console.error(error);
+      setMessage("Something went wrong ❌");
     }
-    mutate(
-      data.filter((card) => card._id !== deleteId),
-      false
-    );
-
-    setDeleteId(null);
-    setMessage("Flashcard deleted ✅");
-
-    setTimeout(() => setMessage(""), 2000);
   }
   if (error) return <p style={styles.status}>Fehler beim Laden</p>;
   if (!data) return <p style={styles.status}>Lade...</p>;
