@@ -1,6 +1,12 @@
 import { useState } from "react";
 
-export default function Flashcard({ card, onEdit, onDelete }) {
+export default function Flashcard({
+  card,
+  onEdit,
+  onDelete,
+  onBookmark,
+  isBookmarked,
+}) {
   const [flipped, setFlipped] = useState(false);
 
   function handleFlip() {
@@ -8,29 +14,53 @@ export default function Flashcard({ card, onEdit, onDelete }) {
   }
 
   const frontImage = card.imageFront || "/images/default.jpg";
+
   const backImage = card.imageBack || frontImage;
 
   return (
     <article style={styles.wrapper} onClick={handleFlip}>
-      <button
-        style={styles.editButton}
-        onClick={(event) => {
-          event.stopPropagation();
-          onEdit(card);
-        }}
-      >
-        ✏️ Edit
-      </button>
-      <button
-        style={styles.deleteButton}
-        onClick={(event) => {
-          event.stopPropagation();
-          onDelete(card._id);
-        }}
-      >
-        🗑
-      </button>
+      {/* BUTTONS */}
+      <div style={styles.buttonGroup}>
+        <button
+          style={{
+            ...styles.iconButton,
+            background: isBookmarked
+              ? "rgba(255,215,0,0.9)"
+              : "rgba(0,0,0,0.6)",
+          }}
+          onClick={(event) => {
+            event.stopPropagation();
+            onBookmark(card._id);
+          }}
+        >
+          {isBookmarked ? "⭐" : "☆"}
+        </button>
 
+        <button
+          style={styles.iconButton}
+          onClick={(event) => {
+            event.stopPropagation();
+            onEdit(card);
+          }}
+        >
+          ✏️
+        </button>
+
+        <button
+          style={{
+            ...styles.iconButton,
+            background: "rgba(255,0,0,0.7)",
+          }}
+          onClick={(event) => {
+            event.stopPropagation();
+            onDelete(card._id);
+          }}
+        >
+          🗑
+        </button>
+      </div>
+
+      {/* CARD */}
       <div
         style={{
           ...styles.card,
@@ -42,13 +72,18 @@ export default function Flashcard({ card, onEdit, onDelete }) {
           style={{
             ...styles.side,
             ...styles.front,
-            backgroundImage: `linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url(${frontImage})`,
+            backgroundImage: `linear-gradient(
+              rgba(0,0,0,0.3),
+              rgba(0,0,0,0.3)
+            ), url(${frontImage})`,
             backgroundSize: "cover",
             backgroundPosition: "center",
           }}
         >
           <div style={styles.overlay} />
+
           <p style={styles.topic}>{card.topic}</p>
+
           <h2 style={styles.question}>{card.question}</h2>
         </div>
 
@@ -57,13 +92,18 @@ export default function Flashcard({ card, onEdit, onDelete }) {
           style={{
             ...styles.side,
             ...styles.back,
-            backgroundImage: `linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url(${backImage})`,
+            backgroundImage: `linear-gradient(
+              rgba(0,0,0,0.3),
+              rgba(0,0,0,0.3)
+            ), url(${backImage})`,
             backgroundSize: "cover",
             backgroundPosition: "center",
           }}
         >
           <div style={styles.overlay} />
+
           <p style={styles.topic}>{card.topic}</p>
+
           <p style={styles.answer}>{card.answer}</p>
         </div>
       </div>
@@ -76,6 +116,7 @@ const styles = {
     perspective: "1000px",
     marginBottom: "16px",
     cursor: "pointer",
+    position: "relative",
   },
 
   card: {
@@ -111,6 +152,7 @@ const styles = {
     position: "absolute",
     inset: 0,
     background: "rgba(0,0,0,0.4)",
+    borderRadius: "12px",
   },
 
   topic: {
@@ -135,28 +177,22 @@ const styles = {
     zIndex: 1,
   },
 
-  editButton: {
+  buttonGroup: {
     position: "absolute",
     top: "10px",
     right: "10px",
-    background: "rgba(0,0,0,0.6)",
-    border: "none",
-    borderRadius: "6px",
-    color: "white",
-    cursor: "pointer",
-    padding: "4px 6px",
+    display: "flex",
+    gap: "8px",
     zIndex: 2,
   },
-  deleteButton: {
-    position: "absolute",
-    bottom: "10px",
-    right: "10px",
-    background: "rgba(186, 25, 31, 0.7)",
+
+  iconButton: {
     border: "none",
     borderRadius: "6px",
+    background: "rgba(0,0,0,0.6)",
     color: "white",
     cursor: "pointer",
-    padding: "4px 6px",
-    zIndex: 2,
+    padding: "4px 8px",
+    fontSize: "16px",
   },
 };
