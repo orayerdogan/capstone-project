@@ -16,6 +16,7 @@ export default function HomePage() {
   const [deleteId, setDeleteId] = useState(null);
   const [message, setMessage] = useState("");
   const [bookmarkedIds, setBookmarkedIds] = useState([]);
+  const [selectedTopic, setSelectedTopic] = useState("All");
 
   useEffect(() => {
     const storedBookmarks = JSON.parse(localStorage.getItem("bookmarks")) || [];
@@ -92,8 +93,13 @@ export default function HomePage() {
   }
 
   if (error) return <p style={styles.status}>Failed to load</p>;
-
   if (!data) return <p style={styles.status}>Loading...</p>;
+
+  const topics = ["All", ...new Set(data.map((card) => card.topic))];
+  const filteredCards =
+    selectedTopic === "All"
+      ? data
+      : data.filter((card) => card.topic === selectedTopic);
 
   return (
     <main style={styles.container}>
@@ -104,9 +110,23 @@ export default function HomePage() {
       {message && <p style={styles.message}>{message}</p>}
 
       <div style={styles.topBar}>
-        <button style={styles.addButton} onClick={() => setOpen(true)}>
-          Add Flashcard
-        </button>
+        <div style={styles.leftControls}>
+          <button style={styles.addButton} onClick={() => setOpen(true)}>
+            Add Flashcard
+          </button>
+
+          <select
+            value={selectedTopic}
+            onChange={(event) => setSelectedTopic(event.target.value)}
+            style={styles.select}
+          >
+            {topics.map((topic) => (
+              <option key={topic} value={topic}>
+                {topic}
+              </option>
+            ))}
+          </select>
+        </div>
 
         <Link href="/favorites" style={styles.favoriteLink}>
           ⭐ Favorites
@@ -114,10 +134,10 @@ export default function HomePage() {
       </div>
 
       <section style={styles.list}>
-        {data.length === 0 ? (
+        {filteredCards.length === 0 ? (
           <p style={styles.emptyMessage}>No flashcards yet. Add one! 🎌</p>
         ) : (
-          data.map((card) => (
+          filteredCards.map((card) => (
             <Flashcard
               key={card._id}
               card={card}
@@ -180,13 +200,21 @@ const styles = {
   },
 
   topBar: {
+    width: "100%",
+    maxWidth: "500px",
     display: "flex",
-    gap: "12px",
+    justifyContent: "space-between",
+    alignItems: "center",
     marginBottom: "20px",
   },
 
+  leftControls: {
+    display: "flex",
+    gap: "10px",
+  },
+
   addButton: {
-    padding: "12px 18px",
+    padding: "8px 12px",
     borderRadius: "10px",
     border: "none",
     background: "#00f5ff",
@@ -194,6 +222,7 @@ const styles = {
     fontWeight: "bold",
     cursor: "pointer",
     boxShadow: "0 0 10px #00f5ff",
+    fontSize: "14px",
   },
 
   favoriteLink: {
@@ -204,6 +233,18 @@ const styles = {
     textDecoration: "none",
     fontWeight: "bold",
     boxShadow: "0 0 10px rgba(255,215,0,0.5)",
+  },
+
+  select: {
+    padding: "8px 12px",
+    borderRadius: "10px",
+    border: "none",
+    background: "#1e293b",
+    color: "#00f5ff",
+    fontWeight: "bold",
+    cursor: "pointer",
+    boxShadow: "0 0 10px rgba(0,245,255,0.4)",
+    fontSize: "14px",
   },
 
   list: {
