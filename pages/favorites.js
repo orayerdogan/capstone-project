@@ -62,6 +62,7 @@ export default function FavoritesPage() {
               card={card}
               onBookmark={handleBookmark}
               isBookmarked={bookmarkedIds.includes(card._id)}
+              showActions={false}
             />
           ))
         )}
