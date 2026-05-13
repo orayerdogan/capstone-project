@@ -48,7 +48,9 @@ export default async function handler(req, res) {
 
   if (req.method === "GET") {
     try {
-      const flashcards = await Flashcard.find({});
+      const flashcards = await Flashcard.find({}).sort({
+        createdAt: -1,
+      });
       return res.status(200).json(flashcards);
     } catch (err) {
       console.error("GET error:", err);
