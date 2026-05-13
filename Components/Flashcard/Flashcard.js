@@ -6,6 +6,7 @@ export default function Flashcard({
   onDelete,
   onBookmark,
   isBookmarked,
+  showActions = true,
 }) {
   const [flipped, setFlipped] = useState(false);
 
@@ -36,28 +37,32 @@ export default function Flashcard({
           {isBookmarked ? "⭐" : "☆"}
         </button>
 
-        <button
-          style={styles.iconButton}
-          onClick={(event) => {
-            event.stopPropagation();
-            onEdit(card);
-          }}
-        >
-          ✏️
-        </button>
+        {showActions && (
+          <button
+            style={styles.iconButton}
+            onClick={(event) => {
+              event.stopPropagation();
+              onEdit(card);
+            }}
+          >
+            ✏️
+          </button>
+        )}
 
-        <button
-          style={{
-            ...styles.iconButton,
-            background: "rgba(255,0,0,0.7)",
-          }}
-          onClick={(event) => {
-            event.stopPropagation();
-            onDelete(card._id);
-          }}
-        >
-          🗑
-        </button>
+        {showActions && (
+          <button
+            style={{
+              ...styles.iconButton,
+              background: "rgba(255,0,0,0.7)",
+            }}
+            onClick={(event) => {
+              event.stopPropagation();
+              onDelete(card._id);
+            }}
+          >
+            🗑
+          </button>
+        )}
       </div>
 
       {/* CARD */}
